@@ -11,6 +11,7 @@ Item {
     property string uSilPlayed: ''
     property int uYContent: 0
     property bool showFailTools: false
+    property bool uiIniciada: false
 
     Settings{
         id: settingsMod002
@@ -32,20 +33,21 @@ Item {
             anchors.horizontalCenter:  r.horizontalCenter
             Flickable{
                 id: flickableTextEditor
-                width: parent.width
+                width: parent.width-app.fs*0.5
                 height: parent.height
+                y: app.fs*0.25
                 contentWidth: textEditor.width
                 contentHeight: textEditor.height
                 clip: true
-
+                anchors.horizontalCenter: parent.horizontalCenter
                 TextEdit{
                     id: textEditor
-                    width: parent.width-app.fs
+                    width: parent.width
                     height: contentHeight
                     font.pixelSize: app.fs
                     color: app.c2
                     wrapMode: Text.WordWrap
-                    anchors.horizontalCenter: parent.horizontalCenter
+
                 }
             }
         }
@@ -57,7 +59,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             onClick: {
                 settingsMod002.uText=textEditor.text
-                prepArrayWord(textEditor.text)
+                setArrayWord(textEditor.text)
             }
         }
         Rectangle {
@@ -71,33 +73,30 @@ Item {
             anchors.horizontalCenter:  r.horizontalCenter
             Flickable{
                 id: flickableSetSil
-                width: parent.width
+                width: parent.width-app.fs*0.5
                 height: parent.height
-                anchors.horizontalCenter:  r.horizontalCenter
-                anchors.top: xRowSetSil.bottom
-                anchors.topMargin: app.fs
+                anchors.horizontalCenter:  parent.horizontalCenter
                 contentWidth: flowSil.width
                 contentHeight: flowSil.height
                 Flow{
                     id: flowSil
-                    spacing: app.fs*0.1
                     width:  parent.width-app.fs
                     anchors.horizontalCenter: parent.horizontalCenter
                     property int widthSil: app.fs*4
                     Repeater{
                         id: repSil
                         Item{
-                            width: modelData!=='|'?botSil.width:app.fs*0.5
-                            height: app.fs*2+app.fs*0.5
+                            width: modelData==='|'?app.fs*0.5:botSil.width
+                            height: botSil.height+app.fs*0.5
                             BotonUX{
                                 id: botSil
-                                anchors.centerIn: parent
                                 text: modelData
                                 backgroudColor: parseInt(app.jsonSilabas[modelData][0])===-1?'red':app.c3
                                 fontColor: parseInt(app.jsonSilabas[modelData][0])===-1?'yellow':app.c2
                                 speed: 250
                                 clip: false
                                 visible: modelData!=='|'
+                                anchors.centerIn: parent
                                 onClick: {
                                     r.uSilPlayed=modelData
                                     tReqAbierto.v++
@@ -198,15 +197,18 @@ Item {
                         }
                     }
                     repSil.model=sils
-                    ms.uNumSilPlay=0
-                    ms.arrayWord=sils
-                    ms.playSil(ms.arrayWord[0])
+                    if(r.uiIniciada){
+                        ms.uNumSilPlay=0
+                        ms.arrayWord=sils
+                        ms.playSil(ms.arrayWord[0])
+                        r.uiIniciada=true
+                    }
                 });
             }
         }
     }
 
-    function prepArrayWord(t){
+    function setArrayWord(t){
         var html='<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="es">
@@ -225,6 +227,12 @@ Item {
         tc1=tc1.replace(/í/g, 'i')
         tc1=tc1.replace(/ó/g, 'o')
         tc1=tc1.replace(/ú/g, 'u')
+        tc1=tc1.replace(/à/g, 'a')
+        tc1=tc1.replace(/è/g, 'e')
+        tc1=tc1.replace(/ì/g, 'i')
+        tc1=tc1.replace(/ò/g, 'o')
+        tc1=tc1.replace(/ù/g, 'u')
+
         tc1=tc1.replace(/\n/g, ' ')
         tc1=tc1.replace(/(/g, ' ( ')
         tc1=tc1.replace(/)/g, ' ) ')
@@ -267,5 +275,8 @@ Item {
         }
         textEditor.text=settingsMod002.uText
         controles.visible=false
+        if(textEditor.text!==''){
+            setArrayWord(textEditor.text)
+        }
     }
 }
