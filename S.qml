@@ -52,8 +52,6 @@ Item {
         BotonUX{
             id: botPlay
             text: 'Escuchar las Sìlabas'
-            c1:app.c3
-            c2:app.c2
             speed: 100
             clip: false
             anchors.horizontalCenter: parent.horizontalCenter
@@ -83,7 +81,7 @@ Item {
                 Flow{
                     id: flowSil
                     spacing: app.fs*0.1
-                    width:  parent.width
+                    width:  parent.width-app.fs
                     anchors.horizontalCenter: parent.horizontalCenter
                     property int widthSil: app.fs*4
                     Repeater{
@@ -95,8 +93,8 @@ Item {
                                 id: botSil
                                 anchors.centerIn: parent
                                 text: modelData
-                                c1:parseInt(app.jsonSilabas[modelData][0])===-1?'red':app.c3
-                                c2:parseInt(app.jsonSilabas[modelData][0])===-1?'yellow':app.c2
+                                backgroudColor: parseInt(app.jsonSilabas[modelData][0])===-1?'red':app.c3
+                                fontColor: parseInt(app.jsonSilabas[modelData][0])===-1?'yellow':app.c2
                                 speed: 250
                                 clip: false
                                 visible: modelData!=='|'
