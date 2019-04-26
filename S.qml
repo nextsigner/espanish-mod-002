@@ -201,9 +201,11 @@ Item {
                         ms.uNumSilPlay=0
                         ms.arrayWord=sils
                         ms.playSil(ms.arrayWord[0])
-                        r.uiIniciada=true
                     }
+                    r.uiIniciada=true
                 });
+               var uHtml=(''+wv.url).replace('file://','')
+                unik.deleteFile(uHtml)
             }
         }
     }
@@ -275,8 +277,6 @@ Item {
         }
         textEditor.text=settingsMod002.uText
         controles.visible=false
-        if(textEditor.text!==''){
-            setArrayWord(textEditor.text)
-        }
+        //unik.run('rm m2000/s3/espanish-mod-002/htmls/*.html')
     }
 }
